@@ -16,11 +16,16 @@ const ContextProvider = ({ children }) => {
   const [resultData, setResultData] = useState("");
   const [selectedChatId, setSelectedChatId] = useState(null);
 
+  // Set base URL dynamically based on the environment
+  const baseUrl = import.meta.env.PROD
+    ? "https://your-backend-url.onrender.com"
+    : "http://localhost:5000";
+
   const handleChatClick = async (chat) => {
     setSelectedChatId(chat.chatId);
     sessionStorage.setItem("selectedChatId", chat.chatId);
     try {
-      const res = await fetch(`http://localhost:5000/api/chat/thread/${chat.chatId}`);
+      const res = await fetch(`${baseUrl}/api/chat/thread/${chat.chatId}`);
       if (!res.ok) throw new Error(`Failed to fetch chat thread: ${res.statusText}`);
       const data = await res.json();
       if (data.length > 0) {
@@ -53,7 +58,7 @@ const ContextProvider = ({ children }) => {
   const fetchChatHistory = async (user) => {
     if (!user?.uid) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/chat/history?userId=${user.uid}`);
+      const res = await fetch(`${baseUrl}/api/chat/history?userId=${user.uid}`);
       const data = await res.json();
       setChatHistory(Array.isArray(data) ? data : []);
       const storedId = sessionStorage.getItem("selectedChatId");
@@ -67,7 +72,7 @@ const ContextProvider = ({ children }) => {
   const saveChatHistory = async (prompt, response, user) => {
     if (!user?.uid) return;
     try {
-      await fetch("http://localhost:5000/api/chat/save", {
+      await fetch(`${baseUrl}/api/chat/save`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -102,7 +107,7 @@ const ContextProvider = ({ children }) => {
     let fullResponse = "";
 
     try {
-      const res = await fetch("http://localhost:5000/api/chat/stream", {
+      const res = await fetch(`${baseUrl}/api/chat/stream`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt: promptToSend }),
