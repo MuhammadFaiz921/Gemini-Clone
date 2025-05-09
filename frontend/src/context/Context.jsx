@@ -18,7 +18,7 @@ const ContextProvider = ({ children }) => {
 
   // Set base URL dynamically based on the environment
   const baseUrl = import.meta.env.PROD
-    ? "https://your-backend-url.onrender.com"
+    ? "//gemini-clone-ir74.onrender.com/"
     : "http://localhost:5000";
 
   const handleChatClick = async (chat) => {
