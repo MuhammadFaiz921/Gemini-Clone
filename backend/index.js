@@ -11,7 +11,13 @@ import path from 'path';
 dotenv.config();
 
 const app = express();
-app.use(cors());
+
+// CORS configuration to allow requests from your frontend URL on Render
+app.use(cors({
+  origin: "https://gemini-clone-ir74.onrender.com", // Replace with your actual frontend URL on Render
+  methods: ["GET", "POST"]
+}));
+
 app.use(express.json());
 
 const _dirname = path.resolve();
