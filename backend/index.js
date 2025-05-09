@@ -6,8 +6,7 @@ import connectDB from './db.js';
 import ChatHistory from './chatHistoryModel.js';
 import mongoose from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
-import path from "path"
-
+import path from 'path';
 
 dotenv.config();
 
@@ -15,7 +14,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const _dirname = path.resolve()
+const _dirname = path.resolve();
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 connectDB();
@@ -77,11 +76,11 @@ app.get('/api/chat/history', async (req, res) => {
     ]);
 
     const chatsWithChatId = chats.map(chat => ({
-  _id: new mongoose.Types.ObjectId(), // Ensure unique _id for React `key`
-  chatId: chat._id,
-  title: chat.title?.trim() || "Untitled",
-  timestamp: chat.timestamp,
-}));
+      _id: new mongoose.Types.ObjectId(), // Ensure unique _id for React `key`
+      chatId: chat._id,
+      title: chat.title?.trim() || "Untitled",
+      timestamp: chat.timestamp,
+    }));
 
     res.json(chatsWithChatId);
   } catch (error) {
@@ -100,11 +99,14 @@ app.get('/api/chat/thread/:chatId', async (req, res) => {
   }
 });
 
-app.use(express.static(path.join(_dirname , "/frontend/dist")))
-app.get('*', (_,res) => {
-  res.sendFile(path.resolve(_dirname , "frontend", "dist", "index.html"))
-})
+// Serve static files for the frontend
+app.use(express.static(path.join(_dirname , "/frontend/dist")));
 
+// Handle all other routes for React routing
+app.get('*', (_, res) => {
+  res.sendFile(path.resolve(_dirname , "frontend", "dist", "index.html"));
+});
 
-const PORT = 5000;
+// Start the server
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
