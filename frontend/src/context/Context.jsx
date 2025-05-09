@@ -17,9 +17,11 @@ const ContextProvider = ({ children }) => {
   const [selectedChatId, setSelectedChatId] = useState(null);
 
   // Set base URL dynamically based on the environment
-  const baseUrl = import.meta.env.PROD
-    ? "//gemini-clone-ir74.onrender.com/"
-    : "http://localhost:5000";
+const baseUrl = (import.meta.env.PROD
+  ? "https://gemini-clone-ir74.onrender.com"
+  : "http://localhost:5000"
+).replace(/\/$/, "");
+
 
   const handleChatClick = async (chat) => {
     setSelectedChatId(chat.chatId);
