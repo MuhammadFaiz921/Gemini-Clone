@@ -1,5 +1,3 @@
-// ✅ Updated Backend: server.js
-
 import express from 'express';
 import cors from 'cors';
 import { GoogleGenerativeAI } from '@google/generative-ai';
@@ -8,12 +6,16 @@ import connectDB from './db.js';
 import ChatHistory from './chatHistoryModel.js';
 import mongoose from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
+import path from "path"
+
 
 dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+const _dirname = path.resolve()
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 connectDB();
@@ -97,6 +99,12 @@ app.get('/api/chat/thread/:chatId', async (req, res) => {
     res.status(500).json({ error: "Failed to fetch thread" });
   }
 });
+
+app.use(express.static(path.join(_dirname , "/frontend/dist")))
+app.get('*', (_,res) => {
+  res.sendFile(path.resolve(_dirname , "frontend", "dist", "index.html"))
+})
+
 
 const PORT = 5000;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

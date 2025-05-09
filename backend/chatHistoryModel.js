@@ -1,4 +1,3 @@
-// ✅ Updated Model: chatHistoryModel.js
 import mongoose from 'mongoose';
 
 const chatHistorySchema = new mongoose.Schema({
